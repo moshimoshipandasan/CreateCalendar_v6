@@ -1,6 +1,6 @@
 /*
  * 年間行事予定カレンダー連携ツール (CreateCalendar)
- * 
+ * 説明書:https://github.com/moshimoshipandasan/CreateCalendar_v6/blob/main/README.md
  * このツールは、スプレッドシートで管理している年間行事予定をGoogleカレンダーに自動的に書き込むための
  * Google Apps Scriptプロジェクトです。スプレッドシートを原本として、カレンダーを常に最新の状態に保ちます。
  * 
@@ -21,6 +21,10 @@
  * - ver5 (2021/09/05): 全角ハイフン「ー」対応
  * - ver5.1 (2022/02/02): 全角ハイフン「−」対応
  * - ver6 (2025/03/22): カレンダー同期機能強化（既存予定の削除と再同期）
+ * 
+ * ライセンス:
+ * MIT License
+ * Copyright (c) 2025 Noboru Ando @ Aoyama Gakuin University
  */
 
 /**
