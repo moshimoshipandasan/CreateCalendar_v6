@@ -15,7 +15,7 @@ Date:2022/02/02 ver5「−」でカレンダーに書き込まないバグを修
 function writeScheduleToCalendar() {
   var sheet = SpreadsheetApp.getActiveSheet();
 //var start_day = new Date(sheet.getRange(4,1).getValue());
-  var result = Browser.msgBox("この時間割をGoolgeカレンダーに作成して良いですか？\\n 【注意】 この操作は取り消せません！",Browser.Buttons.OK_CANCEL);
+  var result = Browser.msgBox("この時間割をGoolgeカレンダーに作成して良いですか？\\n 【注意】 この操作は取り消せません！\\n カレンダー内の既存の予定はすべて削除されます！",Browser.Buttons.OK_CANCEL);
   var CALENDAR_ID = sheet.getRange(1,5).getValue(); //カレンダーIDの取得
   if (CALENDAR_ID == '') {
     var result = Browser.msgBox("カレンダーIDが指定されていません。\\n カレンダーIDを入力して再度[作成]を実行してください。\\n 操作を終了します");
@@ -25,6 +25,61 @@ function writeScheduleToCalendar() {
   if(result == "ok"){
     try {
       var schedule_table = sheet.getRange(3,1,31,24).getValues();
+      
+      // スプレッドシートの期間（最初と最後の日付）を特定
+      var startDate = null;
+      var endDate = null;
+      
+      // 最初と最後の日付を検索
+      for (var j = 0; j < 24; j = j + 2) {
+        for (var i = 0; i < 31; i++) {
+          var tmp_date = schedule_table[i][j];
+          // 日付オブジェクトかどうかを厳密にチェック
+          if (tmp_date !== '' && tmp_date instanceof Date && !isNaN(tmp_date.getTime())) {
+            if (startDate === null || tmp_date < startDate) {
+              startDate = new Date(tmp_date);
+            }
+            if (endDate === null || tmp_date > endDate) {
+              endDate = new Date(tmp_date);
+            }
+          }
+        }
+      }
+      
+      // 日付が見つからない場合は処理を中止
+      if (startDate === null || endDate === null) {
+        Browser.msgBox('スプレッドシートに有効な日付が見つかりません。処理を中止します。');
+        return;
+      }
+      
+      // 終了日の23:59:59に設定（その日の終わりまで）
+      endDate.setHours(23, 59, 59, 999);
+      
+      try {
+        // 指定期間内の既存の予定をすべて削除
+        var events = calendar.getEvents(startDate, endDate);
+        Logger.log('削除対象期間: ' + startDate + ' から ' + endDate);
+        Logger.log('削除対象イベント数: ' + events.length);
+        
+        for (var e = 0; e < events.length; e++) {
+          try {
+            events[e].deleteEvent();
+            Utilities.sleep(100); // APIレート制限を避けるための短い待機
+          } catch (deleteErr) {
+            Logger.log('イベント削除エラー: ' + deleteErr.message);
+          }
+        }
+        
+        // 削除完了のメッセージ
+        if (events.length > 0) {
+          Logger.log(events.length + '件の既存の予定を削除しました。');
+        }
+      } catch (eventsErr) {
+        Logger.log('イベント取得エラー: ' + eventsErr.message);
+        // エラーが発生しても処理を続行
+      }
+      
+      // スプレッドシートの予定を新たに書き込む
       var date = Utilities.formatDate(schedule_table[0][0], 'Asia/Tokyo', 'yyyy/MM/dd');
       var recurrence = CalendarApp.newRecurrence()   
       for (var j = 0; j < 24; j = j + 2){
@@ -68,7 +123,7 @@ function writeScheduleToCalendar() {
           }
         }
       }
-      Browser.msgBox('年間行事予定のカレンダーへの流し込みが終了しました');
+      Browser.msgBox('年間行事予定のカレンダーへの流し込みが終了しました。\nカレンダーの予定はスプレッドシートの内容で更新されました。');
     } catch(e) {
       Browser.msgBox('エラーが発生しました:' + e.message);
     }
