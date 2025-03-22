@@ -14,7 +14,7 @@
 
 ### 対象スプレッドシート
 
-年間行事予定表2025: [https://docs.google.com/spreadsheets/d/1dpPBv5ZQpsKGdN2ubQB2xC2jhf3Kic2QgtXLRHWy5CE/copy](https://docs.google.com/spreadsheets/d/1dpPBv5ZQpsKGdN2ubQB2xC2jhf3Kic2QgtXLRHWy5CE/copy)
+年間行事予定表2025v6: [https://docs.google.com/spreadsheets/d/1dpPBv5ZQpsKGdN2ubQB2xC2jhf3Kic2QgtXLRHWy5CE/copy](https://docs.google.com/spreadsheets/d/1dpPBv5ZQpsKGdN2ubQB2xC2jhf3Kic2QgtXLRHWy5CE/copy)
 
 ### 初期設定
 
