@@ -8,7 +8,11 @@ Date:2021/08/18 ver4 <>で囲むと時間指定できるようにしました。
 Date:2021/09/05 ver5 全角のハイフン「ー」でカレンダーに書き込まないバグを修正しました
 Date:2022/02/02 ver5「−」でカレンダーに書き込まないバグを修正しました
 */
-function myFunction() {
+/**
+ * 年間行事予定をGoogleカレンダーに書き込む関数
+ * スプレッドシートの行事予定データをGoogleカレンダーに流し込みます
+ */
+function writeScheduleToCalendar() {
   var sheet = SpreadsheetApp.getActiveSheet();
 //var start_day = new Date(sheet.getRange(4,1).getValue());
   var result = Browser.msgBox("この時間割をGoolgeカレンダーに作成して良いですか？\\n 【注意】 この操作は取り消せません！",Browser.Buttons.OK_CANCEL);
@@ -72,10 +76,14 @@ function myFunction() {
   }      
 }
 
+/**
+ * スプレッドシートを開いたときに実行される関数
+ * 年間行事予定メニューを作成します
+ */
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu('年間行事予定');
-  menu.addItem('カレンダーへ書き込み実行', 'myFunction');
+  menu.addItem('カレンダーへ書き込み実行', 'writeScheduleToCalendar');
   menu.addItem('祝日を行事予定に追加', 'addHolidaysToSchedule');
   menu.addItem('祝日を行事予定から削除', 'removeHolidaysFromSchedule');
   menu.addItem('毎週の予定を追加', 'addWeeklySchedule');
