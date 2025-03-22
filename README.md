@@ -12,6 +12,10 @@
 
 ## 使用方法
 
+### 対象スプレッドシート
+
+年間行事予定表2025: [https://docs.google.com/spreadsheets/d/1uW0iHBca0djbXUHahJRmQaRJ6H-JwkONOOFVWXf2fo0/copy](https://docs.google.com/spreadsheets/d/1uW0iHBca0djbXUHahJRmQaRJ6H-JwkONOOFVWXf2fo0/copy)
+
 ### 初期設定
 
 1. スプレッドシートのA1セルに西暦を入力します
