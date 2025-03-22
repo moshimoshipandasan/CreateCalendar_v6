@@ -1,16 +1,32 @@
 /*
-TimetableToCalenar:年間行事予定をカレンダーに１年間分で流し込む
-Author:noboru ando
-Date:2020/02/23 ver1作成
-Date:2021/03/31 1年分書込み対応
-Date:2021/04/01 ver3 ,区切りで複数日程対応
-Date:2021/08/18 ver4 <>で囲むと時間指定できるようにしました。時間指定は<12:00-14:00>のようにハイフンを入れてください
-Date:2021/09/05 ver5 全角のハイフン「ー」でカレンダーに書き込まないバグを修正しました
-Date:2022/02/02 ver5「−」でカレンダーに書き込まないバグを修正しました
-*/
+ * 年間行事予定カレンダー連携ツール (CreateCalendar)
+ * 
+ * このツールは、スプレッドシートで管理している年間行事予定をGoogleカレンダーに自動的に書き込むための
+ * Google Apps Scriptプロジェクトです。スプレッドシートを原本として、カレンダーを常に最新の状態に保ちます。
+ * 
+ * 主な機能:
+ * - スプレッドシートの年間行事予定をGoogleカレンダーに書き込み
+ * - 書き込み時に指定期間内の既存の予定をすべて削除し、スプレッドシートの内容で更新
+ * - 祝日データの行事予定への追加・削除
+ * - 特定の曜日に毎週同じ予定を一括追加・削除
+ * - 時間指定のある予定と終日予定の両方に対応
+ * 
+ * Author: noboru ando
+ * 
+ * バージョン履歴:
+ * - ver1 (2020/02/23): 初版作成
+ * - ver2 (2021/03/31): 1年分書込み対応
+ * - ver3 (2021/04/01): カンマ区切りで複数日程対応
+ * - ver4 (2021/08/18): 時間指定機能追加（<12:00-14:00>形式）
+ * - ver5 (2021/09/05): 全角ハイフン「ー」対応
+ * - ver5.1 (2022/02/02): 全角ハイフン「−」対応
+ * - ver6 (2025/03/22): カレンダー同期機能強化（既存予定の削除と再同期）
+ */
+
 /**
  * 年間行事予定をGoogleカレンダーに書き込む関数
- * スプレッドシートの行事予定データをGoogleカレンダーに流し込みます
+ * スプレッドシートの行事予定データをGoogleカレンダーに流し込み、
+ * 指定期間内の既存の予定をすべて削除してからスプレッドシートの内容で更新します。
  */
 function writeScheduleToCalendar() {
   var sheet = SpreadsheetApp.getActiveSheet();
@@ -138,11 +154,11 @@ function writeScheduleToCalendar() {
 function onOpen() {
   var ui = SpreadsheetApp.getUi();
   var menu = ui.createMenu('年間行事予定');
-  menu.addItem('カレンダーへ書き込み実行', 'writeScheduleToCalendar');
-  menu.addItem('祝日を行事予定に追加', 'addHolidaysToSchedule');
-  menu.addItem('祝日を行事予定から削除', 'removeHolidaysFromSchedule');
-  menu.addItem('毎週の予定を追加', 'addWeeklySchedule');
-  menu.addItem('毎週の予定を削除', 'removeWeeklySchedule');
+  menu.addItem('【祝日追加】祝日を行事予定に追加', 'addHolidaysToSchedule');
+  menu.addItem('【祝日削除】祝日を行事予定から削除', 'removeHolidaysFromSchedule');
+  menu.addItem('【毎週追加】毎週の予定を追加', 'addWeeklySchedule');
+  menu.addItem('【毎週削除】毎週の予定を削除', 'removeWeeklySchedule');
+  menu.addItem('【登録】カレンダーへ書き込み実行', 'writeScheduleToCalendar');
   menu.addToUi();
 }
 
